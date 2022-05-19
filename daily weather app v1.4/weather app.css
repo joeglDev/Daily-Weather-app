@@ -1,0 +1,131 @@
+body {
+    color: white;
+}
+
+Span {
+    background-color: #f5941d;
+}
+
+#labelSpan {
+    background-color: #121212;
+}
+
+#ImgContainer {
+    position: fixed;
+    max-width: 100%;
+    height: auto;
+    top: 0px;
+    left: 0px;
+    z-index: 0;
+    opacity: 0.9;
+    height: 100%;
+}
+
+#backImg {
+    max-width: 100%;
+    height: auto;
+}
+
+.submitbtn {
+    background-color: #f5941d;
+    color: white;
+    border: transparent;
+}
+
+.submitForm {
+    position: absolute;
+    right: 550px;
+    top: 500px;
+    z-index: 1;
+}
+
+#stats {
+    position: relative;
+    width: 100vw;
+    height: 80vh;
+    z-index: 1;
+    font-size: 5vh;
+}
+
+#city {
+    position: fixed;
+    left: 0%;
+    top: 0%;
+    height: 150px;
+    width: 400px;
+}
+
+#temp {
+    position: fixed;
+    left: 0%;
+    top: 25%;
+    height: 150px;
+    width: 400px;
+}
+
+#wind {
+    position: fixed;
+    left: 50%;
+    top: 0%;
+    height: 150px;
+    width: 400px;
+}
+
+#weather {
+    position: fixed;
+    left: 50%;
+    top: 25%;
+    height: 150px;
+    width: 400px;
+}
+
+#rainfall {
+    position: fixed;
+    left: 0%;
+    top: 50%;
+    height: 150px;
+    width: 400px;
+}
+
+#graph {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+}
+
+/* Below styles for bar graph */
+svg {
+    background-color: #121212;
+    z-index: 1;
+    color: white;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+}
+
+.bar {
+    fill: steelblue;
+    display: inline-block;
+    margin: 2px;
+}
+
+.bar:hover {
+    fill: blue;
+}
+
+.label {
+    font-size: 15px;
+    text-anchor: middle;
+    fill: white;
+}
+
+.tooltip {
+    font-weight: bold;
+    position: absolute;
+    background-color: #121212;
+    border: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    z-index: 1;
+    color: white;
+}
