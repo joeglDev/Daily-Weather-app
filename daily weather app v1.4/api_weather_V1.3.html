@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<!--Refactored to source from open-meteo api as oppased to hiroku
+add forecast bar graph
+fetch name from lattitude with another api
+2022-04-21 added in precipitation graph - bug appends new graph on call
+2022-04-25 - rafactered to improve readability and remove global variables
+2022-04-28 - removed most global variables STILL NEED TO REMOVE rainfall
+2022-05-19 refactered to move css and js to separate scripts
+-PREVENTED MISSIZING OF RAINFALL GRAPH
+-BUG: need to remove svg if present
+
+TO DO: set defailt background 
+2.  mobile grid layout
+3. make movile friendly-->
+
+<style>
+    @import "weather app.css";
+</style>
+
+
+<body>
+
+    <!--div for css grid layout-->
+    <div class="grid-container" id="grid-container">
+        <!--div for image based on weather-->
+        <div id="weatherImg">
+            <img id="backImg" title="" alt="displays background image reflecting weather">
+        </div> 
+        <div>
+            <!-- user inputs location-->
+            <form class="submitForm center">
+                <input type="text" id="inputLoc">
+                <input class="submitbtn" type=”button” onClick="updatePage()" Value="Submit">
+            </form>
+        </div id="stats">
+        <!--Display weather data to user-->
+        <div id="notFoundDiv"> <span id="notFound"></span></div>
+        <div id="city"> Location: <span id="getCity"></span> </div>
+        <div id="temp"> Temperature: <span id="getTemp"></span></div>
+        <div id="wind"> Wind Speed: <span id="getWind"></span></div>
+        <div id="weather"> Weather: <span id="getWeather"></span></div>
+        <div id="isRain"> Daily rainfall: <span id="getRainfall"></span></div>
+    </div>
+
+    <script src="weather app.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+</body>
+
+</html>

@@ -12,17 +12,17 @@ remove getLoc call from getcity()
 
 //call order of functions
 async function updatePage() {
-		City();
-        await getLocation();
-        await getWeather();
-        isRaining();
-        await getRainfall();
-        hourlyPrecipitation();
-        changeBackground();
+		City(); //get initial location
+        await getLocation(); //get latitude and longitude for location
+        await getWeather(); //get weather  and update html
+        isRaining(); //checks if raining and updates html
+        await getRainfall(); //gets hourly precipitation
+        hourlyPrecipitation(); //plots graph of hourly precipitation
+        changeBackground(); //updates background based on current weather
         
 }
 
-//gets city name from input and returns as string, calls getLocation
+//gets city name from input and returns as string
  var City = function() {
     let city1 = (document.getElementById("inputLoc").value);
     city = city1[0].toUpperCase() + city1.substring(1);
@@ -31,15 +31,16 @@ async function updatePage() {
     return City;
 }
 
+//fetches latitiude and longitude of city location from API
  function getLocation() {
-    //get city lattitude and longitude
      return fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`)
         .then(data => data.json())
         .then(data => {
             //catch missing city location
             if (data.results === undefined) {
                 console.log("DATA NOT FOUND");
-                document.getElementById("notFound").innerHTML = "Warning: Location was not found in our database. Please check spelling and try again."
+                document.getElementById("notFound").style.visibility = "visible";
+                document.getElementById("notFound").innerHTML = "Warning: Location was not found in our database. Please check spelling and try again.";
             }
             else { document.getElementById("notFound").innerHTML = "" };
 
@@ -52,6 +53,7 @@ async function updatePage() {
         })
 }
 
+//get weathercode data from api and update html
     function getWeather() {
  
     //get weathercode data
@@ -135,13 +137,8 @@ async function updatePage() {
                     break;
             }
 
-            //update HTML ased on JSON data
+            //update HTML based on JSON data
             currentWeather = data.daily.weathercode[0];
-
-            
-            
-            
-
 
             console.log(`4. current weather: ${currentWeather}`);
             console.log("Daily Weather:" + dailyWeather)
@@ -150,8 +147,10 @@ async function updatePage() {
             document.getElementById("getWeather").innerHTML = dailyWeather;
             
             return currentWeather
-        })}
+        })
+    }
  
+    //checks if raining based on weathercode and updates html
         function isRaining() {
             //update daily precipitation if raining
             if (currentWeather === 51 || currentWeather === 52 || currentWeather === 53 || currentWeather === 56 || currentWeather === 57 || currentWeather === 80 || currentWeather === 61 || currentWeather === 62 || currentWeather === 63 || currentWeather === 95) {
@@ -183,39 +182,71 @@ async function updatePage() {
             }
             */
 
+            //get hourly preceding precipitation data from API and return
  function getRainfall() {
-    //get hourly preceding precipitation data and return
-    
         return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=precipitation&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FLondon`)
         .then(data => data.json())
         .then((data) => {
-
             for (let i = 0; i < 24; i++) {rainfall.push(data.hourly.precipitation[i])};
-            console.log(`Hourly precipitation: ${rainfall}`)       
+            console.log(`Hourly precipitation: ${rainfall}`) 
+            return rainfall      
         })  
 }
 
 function changeBackground() {
     //swapout background image based on weather
     console.log("7. Changing background.")
-    let background = document.getElementById("backImg");
 
-    //needs refactoring
+
+    /*
+    let background = undefined
+    switch (currentWeather) {
+
+        default:
+            image = '<img src="#!"></img>';
+        case 2 || 3:
+            background = '<img id="backImg" alt="displays background image reflecting weather" src="C:/Users/joeglbe/Desktop/Binfo/Projects/HTML JavaScript/2022-04-05 API basics/images/day/partly cloudy.jpg"></img>';
+            break;
+        case 0 || 1:
+            background= '<img id="backImg" alt="displays background image reflecting weather" src="C:/Users/joeglbe/Desktop/Binfo/Projects/HTML JavaScript/2022-04-05 API basics/images/day/sunny.jpg"></img>';
+            break;
+        case 51 || 52 || 53 ||56 || 57 || 80 || 61 || 62 || 62:
+            background = '<img id="backImg" alt="displays background image reflecting weather" src="C:/Users/joeglbe/Desktop/Binfo/Projects/HTML JavaScript/2022-04-05 API basics/images/day/rain.jpg"></img>';
+            break;
+        case 95:
+            background = '<img id="backImg" alt="displays background image reflecting weather" src="C:/Users/joeglbe/Desktop/Binfo/Projects/HTML JavaScript/2022-04-05 API basics/images/day/snow.jpg"></img>';
+            break;
+        case 45 || 48:
+            background = '<img id="backImg" alt="displays background image reflecting weather" src="C:/Users/joeglbe/Desktop/Binfo/Projects/HTML JavaScript/2022-04-05 API basics/images/day/fog.jpg"></img>';
+            break;
+    }
+    
+    console.log(background)
+
+    document.getElementById("backImg").innerHTML = background;
+    console.log(document.getElementById("backImg"))
+    */
+
+    document.getElementById("weatherImg").style.visibility = "visible";
+let background = document.getElementById("backImg");
+
     if (currentWeather === 2 || currentWeather === 3) {
-        background.src = "/images/day/partly cloudy.jpg";
+        background.src = "images/day/partly cloudy.jpg";
     }
     if (currentWeather === 0 || currentWeather === 1) {
-        background.src = "/images/day/sunny.jpg";
+        background.src = "images/day/sunny.jpg";
     }
     if (currentWeather === 51 || currentWeather === 52 || currentWeather === 53 || currentWeather === 56 || currentWeather === 57 || currentWeather === 80 || currentWeather === 61 || currentWeather === 62 || currentWeather === 63) {
-        background.src = "/images/day/rain.jpg";
+        background.src = "images/day/rain.jpg";
     };
     if (currentWeather === 95) {
-        background.src = "/Projects/2022-04-05 API basics/images/day/rain.jpg"
+        background.src = "images/day/rain.jpg"
     };
     if (currentWeather === 45 || currentWeather === 48) {
-        background.src = "/images/day/fog.jpg"
+        background.src = "images/day/fog.jpg"
     };
+    
+    
 
 
     //snow
@@ -230,17 +261,15 @@ function changeBackground() {
 
 function hourlyPrecipitation() {
     console.log("Plotting graph");
-    
-
     //select last 24 values from rainfall to avoid multiple refrehes
     let data = [];
     for (let i = rainfall.length -24; i <rainfall.length ; i++) {data.push(rainfall[i])};
-    const w = 600;
+    const w = 760;
     const h = 200;
     const margin = 60;
 
     //create svg area
-    let area = document.getElementById("stats")
+    let area = document.getElementById("grid-container")
     const svg = d3.select(area)
         .append("svg")
         .attr("width", w)
@@ -278,8 +307,8 @@ function hourlyPrecipitation() {
         .on("mousemove", function (event, d) {
             const [x, y] = d3.pointer(event);		//get cooredinants of mouse
             tooltip.html(`<p>Rainfall: ${d} mm</p>`)
-                .style("left", (x + 700) + "px")
-                .style("top", (y + 200) + "px");
+                .style("left", (x + 100) + "px")
+                .style("top", (y + 300) + "px");
         })
 
         .on("mouseout", function (d) {
