@@ -12,18 +12,18 @@ remove getLoc call from getcity()
 
 //call order of functions
 async function updatePage() {
-		City(); //get initial location
-        await getLocation(); //get latitude and longitude for location
-        await getWeather(); //get weather  and update html
-        isRaining(); //checks if raining and updates html
-        await getRainfall(); //gets hourly precipitation
-        hourlyPrecipitation(); //plots graph of hourly precipitation
-        changeBackground(); //updates background based on current weather
-        
+    City(); //get initial location
+    await getLocation(); //get latitude and longitude for location
+    await getWeather(); //get weather  and update html
+    isRaining(); //checks if raining and updates html
+    await getRainfall(); //gets hourly precipitation
+    hourlyPrecipitation(); //plots graph of hourly precipitation
+    changeBackground(); //updates background based on current weather
+
 }
 
 //gets city name from input and returns as string
- var City = function() {
+var City = function () {
     let city1 = (document.getElementById("inputLoc").value);
     city = city1[0].toUpperCase() + city1.substring(1);
     console.log(`1. City: ${city}`)
@@ -32,8 +32,8 @@ async function updatePage() {
 }
 
 //fetches latitiude and longitude of city location from API
- function getLocation() {
-     return fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`)
+function getLocation() {
+    return fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`)
         .then(data => data.json())
         .then(data => {
             //catch missing city location
@@ -54,14 +54,14 @@ async function updatePage() {
 }
 
 //get weathercode data from api and update html
-    function getWeather() {
- 
+function getWeather() {
+
     //get weathercode data
-    
+
     return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=precipitation&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FLondon`)
         .then(data => data.json())
         .then((data) => {
-            console.log("3. Weather data:"); console.log(data); 
+            console.log("3. Weather data:"); console.log(data);
             let dailyWeather = undefined;
 
             //convert weathercode data to weather description
@@ -145,52 +145,52 @@ async function updatePage() {
             document.getElementById("getTemp").innerHTML = `${data.daily.temperature_2m_max[0]} 'C`;
             document.getElementById("getWind").innerHTML = `${data.daily.windspeed_10m_max[0]} Km/h`;
             document.getElementById("getWeather").innerHTML = dailyWeather;
-            
+
             return currentWeather
         })
-    }
- 
-    //checks if raining based on weathercode and updates html
-        function isRaining() {
-            //update daily precipitation if raining
-            if (currentWeather === 51 || currentWeather === 52 || currentWeather === 53 || currentWeather === 56 || currentWeather === 57 || currentWeather === 80 || currentWeather === 61 || currentWeather === 62 || currentWeather === 63 || currentWeather === 95) {
-                console.log("5. It is raining.");
-                fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=precipitation&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FLondon`)
-             .then(data => data.json())
-             .then((data) => {
+}
+
+//checks if raining based on weathercode and updates html
+function isRaining() {
+    //update daily precipitation if raining
+    if (currentWeather === 51 || currentWeather === 52 || currentWeather === 53 || currentWeather === 56 || currentWeather === 57 || currentWeather === 80 || currentWeather === 61 || currentWeather === 62 || currentWeather === 63 || currentWeather === 95) {
+        console.log("5. It is raining.");
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=precipitation&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FLondon`)
+            .then(data => data.json())
+            .then((data) => {
                 document.getElementById("getRainfall").innerHTML = `${data.daily.precipitation_sum[0]} mm`;
             })
-        }
-            else {
-                console.log("5. Not raining")
-                document.getElementById("getRainfall").innerHTML = "Not raining"    
-            };
-        }
+    }
+    else {
+        console.log("5. Not raining")
+        document.getElementById("getRainfall").innerHTML = "Not raining"
+    };
+}
 
-            
 
-            /*
-            switch(data.daily.weathercode[0]) {
-            case 0 || 1 || 2 || 3 || 45 ||48:
-            console.log("5. Not raining")
-            document.getElementById("getRainfall").innerHTML = "Not raining"
-            break;
-            case 51 || 53 || 55 || 56 || 57 || 61 || 62 || 63 || 66 || 67 ||71 ||73 ||75 ||77||80||81||82||85||86||95 ||96||99:
-            console.log("5. It is raining.");
-            document.getElementById("getRainfall").innerHTML = `${data.daily.precipitation_sum[0]} mm`
-                break;               
-            }
-            */
 
-            //get hourly preceding precipitation data from API and return
- function getRainfall() {
-        return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=precipitation&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FLondon`)
+/*
+switch(data.daily.weathercode[0]) {
+case 0 || 1 || 2 || 3 || 45 ||48:
+console.log("5. Not raining")
+document.getElementById("getRainfall").innerHTML = "Not raining"
+break;
+case 51 || 53 || 55 || 56 || 57 || 61 || 62 || 63 || 66 || 67 ||71 ||73 ||75 ||77||80||81||82||85||86||95 ||96||99:
+console.log("5. It is raining.");
+document.getElementById("getRainfall").innerHTML = `${data.daily.precipitation_sum[0]} mm`
+    break;               
+}
+*/
+
+//get hourly preceding precipitation data from API and return
+function getRainfall() {
+    return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=precipitation&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&timezone=Europe%2FLondon`)
         .then(data => data.json())
         .then((data) => {
-            for (let i = 0; i < 24; i++) {rainfall.push(data.hourly.precipitation[i])};
-            console.log(`Hourly precipitation: ${rainfall}`) 
-            return rainfall      
-        })  
+            for (let i = 0; i < 24; i++) { rainfall.push(data.hourly.precipitation[i]) };
+            console.log(`Hourly precipitation: ${rainfall}`)
+            return rainfall
+        })
 }
 
 function changeBackground() {
@@ -228,7 +228,7 @@ function changeBackground() {
     */
 
     document.getElementById("weatherImg").style.visibility = "visible";
-let background = document.getElementById("backImg");
+    let background = document.getElementById("backImg");
 
     if (currentWeather === 2 || currentWeather === 3) {
         background.src = "images/day/partly cloudy.jpg";
@@ -245,8 +245,8 @@ let background = document.getElementById("backImg");
     if (currentWeather === 45 || currentWeather === 48) {
         background.src = "images/day/fog.jpg"
     };
-    
-    
+
+
 
 
     //snow
@@ -263,7 +263,7 @@ function hourlyPrecipitation() {
     console.log("Plotting graph");
     //select last 24 values from rainfall to avoid multiple refrehes
     let data = [];
-    for (let i = rainfall.length -24; i <rainfall.length ; i++) {data.push(rainfall[i])};
+    for (let i = rainfall.length - 24; i < rainfall.length; i++) { data.push(rainfall[i]) };
     const w = 760;
     const h = 200;
     const margin = 60;
@@ -297,6 +297,7 @@ function hourlyPrecipitation() {
         .attr("width", xScale.bandwidth() - 5) //automatically set width (-5 to get a gap)
         .attr("height", (d, i) => { return h - (2 * margin) - yScale(d) })
         .attr("class", "bar")
+
         //spawning and placement of tooltips
         .on("mouseover", function (d) {
 
@@ -316,6 +317,18 @@ function hourlyPrecipitation() {
                 .duration(200)
                 .style("opacity", 0);
         })
+
+    /*
+    //styling
+    if (isDay) {
+        svg.style("background", "#121212")
+    svg.style("color", "white")
+    }
+    else {
+        svg.style("background", "rgb(231, 231, 231)")
+    svg.style("color", "black")
+    } */
+
 
     //create tooltip
     const tooltip = d3.select("body").append("div")
@@ -348,3 +361,57 @@ function hourlyPrecipitation() {
         .attr("class", "label")
         .text("Rainfall /mm");
 }
+
+let isDay = false;
+function dayNight() {
+
+
+    let body = document.getElementsByTagName("body");
+    let gridDiv = document.getElementsByClassName("gridDiv");
+    let svg = document.getElementsByTagName("svg");
+    console.log(svg)
+
+
+    if (isDay) {
+
+        document.body.style.background = "rgb(231, 231, 231)";
+        document.body.style.color = "white";
+        for (let i = 0; i < gridDiv.length; i++) {
+            gridDiv[i].style.background = "#121212";
+        }
+
+        try {
+            svg[0].style.background = "#121212"; 
+            svg[0].style.color = "white"; 
+        }
+        catch (error) {
+            console.log("NO SVG AREA")
+        }
+
+        isDay = false;
+        return isDay
+    }
+
+    else {
+        document.body.style.background = "#121212";
+        document.body.style.color = "black";
+        for (let i = 0; i < gridDiv.length; i++) {
+            gridDiv[i].style.background = "rgb(231, 231, 231)";
+        }
+
+        try {
+            svg[0].style.background = "rgb(231, 231, 231)"; 
+            svg[0].style.color = "black"; 
+        }
+        catch (error) {
+            console.log("NO SVG AREA")
+        }
+
+        isDay = true;
+        return isDay
+    }
+
+}
+
+
+
